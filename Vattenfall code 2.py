@@ -44,6 +44,8 @@ driver.find_element_by_id('submitButton2').click()
 wait.until(presence_of_element_located((By.XPATH ,'//*[@id="collapse-8769"]/div/ul/li[1]/a')))
 driver.find_element_by_xpath('//*[@id="collapse-8769"]/div/ul/li[1]/a').click()
 
+
+# driver.execute_script(('window.scrollTo(0,250);'))
 # to open the from tab
 wait.until(presence_of_element_located((By.XPATH, '/html/body/section/div/div/div/div[1]/consumption/div[1]/div/consumption-heat/div/div/consumption-heat-energy/div/div[1]/consumption-filter-time/div/div[2]/consumption-filter-time-month/datepicker-range-selection/div/div[1]/datepicker-dropdown/div/input')))
 #Click on the div to select
@@ -62,7 +64,7 @@ while selectedYear != fromYear:
 #
 driver.find_element_by_css_selector('body > section > div > div > div > div.b2bconsumptionblock > consumption > div:nth-child(1) > div > consumption-heat > div > div > consumption-heat-energy > div > div.col-xs-12.consumption-filter.flex-space-between > consumption-filter-time > div > div:nth-child(2) > consumption-filter-time-month > datepicker-range-selection > div > div:nth-child(1) > datepicker-dropdown > div > div > ul > li > div > div > div > table > tbody').find_elements_by_tag_name('td')[fromMonth-1].click()
 
-
+driver.execute_script(('window.scrollTo(0,450);'))
 # to open the to tab
 driver.find_element_by_xpath('/html/body/section/div/div/div/div[1]/consumption/div[1]/div/consumption-heat/div/div/consumption-heat-energy/div/div[1]/consumption-filter-time/div/div[2]/consumption-filter-time-month/datepicker-range-selection/div/div[2]/datepicker-dropdown/div/input').click()
 time.sleep(1)
@@ -76,109 +78,116 @@ while selectedYear != toYear:
     selectedYear = int(driver.find_element_by_css_selector('body > section > div > div > div > div.b2bconsumptionblock > consumption > div:nth-child(1) > div > consumption-heat > div > div > consumption-heat-energy > div > div.col-xs-12.consumption-filter.flex-space-between > consumption-filter-time > div > div:nth-child(2) > consumption-filter-time-month > datepicker-range-selection > div > div:nth-child(2) > datepicker-dropdown > div > div > ul > li > div > div > div > table > thead > tr > th:nth-child(2) > button > strong').text)
     driver.find_element_by_css_selector('body > section > div > div > div > div.b2bconsumptionblock > consumption > div:nth-child(1) > div > consumption-heat > div > div > consumption-heat-energy > div > div.col-xs-12.consumption-filter.flex-space-between > consumption-filter-time > div > div:nth-child(2) > consumption-filter-time-month > datepicker-range-selection > div > div:nth-child(2) > datepicker-dropdown > div > div > ul > li > div > div > div > table > tbody').find_elements_by_tag_name('td')[toMonth-1].click()
 
-# wait.until(presence_of_element_located((By.XPATH , '/html/body/section/div/div/div/div[1]/consumption/div[1]/div/consumption-heat/div/div/consumption-heat-energy/div/div[2]/consumption-graph/div/div[2]/button/span[2]')))
-# driver.execute_script(('window.scrollTo(0,750);'))
-# driver.find_element_by_xpath('/html/body/section/div/div/div/div[1]/consumption/div[1]/div/consumption-heat/div/div/consumption-heat-energy/div/div[2]/consumption-graph/div/div[2]/button/span[2]').click()
-#
+wait.until(presence_of_element_located((By.CSS_SELECTOR, '#consumption-graph-container > div:nth-child(4) > button > span:nth-child(2)')))
+driver.find_element_by_css_selector('#consumption-graph-container > div:nth-child(4) > button > span:nth-child(2)').click()
 
 
+# driver.execute_script(('window.scrollTo(0,0);'))
 # to open the Valj anlaggning
+driver.execute_script(('window.scrollTo(0,10);'))
+time.sleep(2)
 wait.until(presence_of_element_located((By.XPATH, '/html/body/div[5]/cm-premise-dir/section/div/div/div/div/div/div/button/span[2]')))
 driver.find_element_by_xpath('/html/body/div[5]/cm-premise-dir/section/div/div/div/div/div/div/button/span[2]').click()
 
-
+# /html/body/div[5]/cm-premise-dir/section/div/div/premise-large-filter-old/section/div[3]/div[1]/div[1]/table/tbody/tr[1]
+# /html/body/div[5]/cm-premise-dir/section/div/div/premise-large-filter-old/section/div[3]/div[1]/div[1]/table/tbody/tr[2]
+#
 # to open the UPP735999100057238916	Bolandsgatan 15 ...		El
-wait.until(presence_of_element_located((By.XPATH, '/html/body/div[5]/cm-premise-dir/section/div/div/premise-large-filter-old/section/div[3]/div[1]/div[1]/table/tbody/tr[4]')))
-driver.find_element_by_xpath('/html/body/div[5]/cm-premise-dir/section/div/div/premise-large-filter-old/section/div[3]/div[1]/div[1]/table/tbody/tr[4]').click()
 
-# to close the Valj anlaggning (Stang X)
-wait.until(presence_of_element_located((By.XPATH, '//*[@id="select-menu"]/div[1]/div/div/div[1]/button/span')))
-driver.find_element_by_xpath('//*[@id="select-menu"]/div[1]/div/div/div[1]/button/span').click()
+trs = driver.find_element_by_xpath('/html/body/div[5]/cm-premise-dir/section/div/div/premise-large-filter-old/section/div[3]/div[1]/div[1]/table/tbody').find_elements_by_tag_name('tr')
+for tr in trs:
+    tr.click()
+# wait.until(presence_of_element_located((By.XPATH, '/html/body/div[5]/cm-premise-dir/section/div/div/premise-large-filter-old/section/div[3]/div[1]/div[1]/table/tbody/tr[4]')))
+# driver.find_element_by_xpath('/html/body/div[5]/cm-premise-dir/section/div/div/premise-large-filter-old/section/div[3]/div[1]/div[1]/table/tbody/tr[4]').click()
 
-# to open the Timme tab
-wait.until(presence_of_element_located((By.XPATH, '//*[@id="home"]/div[1]/div[1]/div/div/ul/li[2]/div/div[1]/button[1]')))
-driver.find_element_by_xpath('//*[@id="home"]/div[1]/div[1]/div/div/ul/li[2]/div/div[1]/button[1]').click()
+    # to close the Valj anlaggning (Stang X)
+    wait.until(presence_of_element_located((By.XPATH, '//*[@id="select-menu"]/div[1]/div/div/div[1]/button/span')))
+    driver.find_element_by_xpath('//*[@id="select-menu"]/div[1]/div/div/div[1]/button/span').click()
 
-fromYear, fromMonth, fromDate = 2020, 1, '1'
-toYear, toMonth, toDate = 2020, 2, '29'
+    # to open the Timme tab
+    wait.until(presence_of_element_located((By.XPATH, '//*[@id="home"]/div[1]/div[1]/div/div/ul/li[2]/div/div[1]/button[1]')))
+    driver.find_element_by_xpath('//*[@id="home"]/div[1]/div[1]/div/div/ul/li[2]/div/div[1]/button[1]').click()
 
-# to open the fromtab
-wait.until(presence_of_element_located((By.XPATH, '//*[@id="home"]/div[1]/div[1]/div/div/ul/li[5]/div/div[1]/div[1]/input')))
-driver.find_element_by_xpath('//*[@id="home"]/div[1]/div[1]/div/div/ul/li[5]/div/div[1]/div[1]/input').click()
+    fromYear, fromMonth, fromDate = 2020, 1, '1'
+    toYear, toMonth, toDate = 2020, 2, '29'
 
-# to click on the year tab in the fromtab in it
-wait.until(presence_of_element_located((By.XPATH, '/html/body/div[12]/div[1]/table/thead/tr[2]/th[2]')))
-driver.find_element_by_xpath('/html/body/div[12]/div[1]/table/thead/tr[2]/th[2]').click()
+    # to open the fromtab
+    wait.until(presence_of_element_located((By.XPATH, '//*[@id="home"]/div[1]/div[1]/div/div/ul/li[5]/div/div[1]/div[1]/input')))
+    driver.find_element_by_xpath('//*[@id="home"]/div[1]/div[1]/div/div/ul/li[5]/div/div[1]/div[1]/input').click()
 
-time.sleep(1)
+    # to click on the year tab in the fromtab in it
+    wait.until(presence_of_element_located((By.XPATH, '/html/body/div[12]/div[1]/table/thead/tr[2]/th[2]')))
+    driver.find_element_by_xpath('/html/body/div[12]/div[1]/table/thead/tr[2]/th[2]').click()
 
-# to click on the year's tab in the fromtab
-wait.until(presence_of_element_located((By.CSS_SELECTOR, 'body > div.datepicker.datepicker-dropdown.dropdown-menu.datepicker-orient-left.datepicker-orient-bottom > div.datepicker-months > table > thead > tr:nth-child(2) > th.datepicker-switch')))
-selectedYear = int(driver.find_element_by_css_selector('body > div.datepicker.datepicker-dropdown.dropdown-menu.datepicker-orient-left.datepicker-orient-bottom > div.datepicker-months > table > thead > tr:nth-child(2) > th.datepicker-switch').text)
-while selectedYear != fromYear:
-    if selectedYear > fromYear:
-        driver.find_element_by_css_selector('body > div.datepicker.datepicker-dropdown.dropdown-menu.datepicker-orient-left.datepicker-orient-bottom > div.datepicker-months > table > thead > tr:nth-child(2) > th.prev').click()
+    time.sleep(1)
 
-    else:
-        driver.find_element_by_css_selector('body > div.datepicker.datepicker-dropdown.dropdown-menu.datepicker-orient-left.datepicker-orient-bottom > div.datepicker-days > table > thead > tr:nth-child(2) > th.next').click()
-# same selector from the line no 119(int())
+    # to click on the year's tab in the fromtab
+    wait.until(presence_of_element_located((By.CSS_SELECTOR, 'body > div.datepicker.datepicker-dropdown.dropdown-menu.datepicker-orient-left.datepicker-orient-bottom > div.datepicker-months > table > thead > tr:nth-child(2) > th.datepicker-switch')))
     selectedYear = int(driver.find_element_by_css_selector('body > div.datepicker.datepicker-dropdown.dropdown-menu.datepicker-orient-left.datepicker-orient-bottom > div.datepicker-months > table > thead > tr:nth-child(2) > th.datepicker-switch').text)
+    while selectedYear != fromYear:
+        if selectedYear > fromYear:
+            driver.find_element_by_css_selector('body > div.datepicker.datepicker-dropdown.dropdown-menu.datepicker-orient-left.datepicker-orient-bottom > div.datepicker-months > table > thead > tr:nth-child(2) > th.prev').click()
 
-# driver.find_element_by_css_selector('#home > div.row.cons-space-top > div:nth-child(1) > div > div > ul > li:nth-child(5) > div > div:nth-child(1) > div.input_container.consumptionStartDt.datepicker-old.date > input').find_elements_by_tag_name('span')[fromMonth-1].click()
-#home > div.row.cons-space-top > div:nth-child(1) > div > div > ul > li:nth-child(5) > div > div:nth-child(1) > div.input_container.consumptionStartDt.datepicker-old.date > input
+        else:
+            driver.find_element_by_css_selector('body > div.datepicker.datepicker-dropdown.dropdown-menu.datepicker-orient-left.datepicker-orient-bottom > div.datepicker-days > table > thead > tr:nth-child(2) > th.next').click()
+    # same selector from the line no 119(int())
+        selectedYear = int(driver.find_element_by_css_selector('body > div.datepicker.datepicker-dropdown.dropdown-menu.datepicker-orient-left.datepicker-orient-bottom > div.datepicker-months > table > thead > tr:nth-child(2) > th.datepicker-switch').text)
 
-# to click on the data bar to pick the from date
-driver.find_element_by_xpath('/html/body/div[12]/div[2]/table/tbody/tr/td').find_elements_by_tag_name('span')[fromMonth-1].click()
-time.sleep(1)
-# /html/body/div[12]/div[1]/table/tbody
-tds_day = driver.find_element_by_xpath('/html/body/div[12]/div[1]/table/tbody').find_elements_by_class_name("day")
-for td in tds_day:
-    if td.text == fromDate:
-        td.click()
-        break
+    # driver.find_element_by_css_selector('#home > div.row.cons-space-top > div:nth-child(1) > div > div > ul > li:nth-child(5) > div > div:nth-child(1) > div.input_container.consumptionStartDt.datepicker-old.date > input').find_elements_by_tag_name('span')[fromMonth-1].click()
+    #home > div.row.cons-space-top > div:nth-child(1) > div > div > ul > li:nth-child(5) > div > div:nth-child(1) > div.input_container.consumptionStartDt.datepicker-old.date > input
+
+    # to click on the data bar to pick the from date
+    driver.find_element_by_xpath('/html/body/div[12]/div[2]/table/tbody/tr/td').find_elements_by_tag_name('span')[fromMonth-1].click()
+    time.sleep(1)
+    # /html/body/div[12]/div[1]/table/tbody
+    tds_day = driver.find_element_by_xpath('/html/body/div[12]/div[1]/table/tbody').find_elements_by_class_name("day")
+    for td in tds_day:
+        if td.text == fromDate:
+            td.click()
+            break
 
 
-# to open the totab
-wait.until(presence_of_element_located((By.XPATH , '/html/body/section/div/div/div/div[1]/consumption/div/div/div/div/div[1]/div/div[1]/div[1]/div/div/ul/li[5]/div/div[1]/div[2]/input')))
-driver.find_element_by_xpath('/html/body/section/div/div/div/div[1]/consumption/div/div/div/div/div[1]/div/div[1]/div[1]/div/div/ul/li[5]/div/div[1]/div[2]/input').click()
+    # to open the totab
+    wait.until(presence_of_element_located((By.XPATH , '/html/body/section/div/div/div/div[1]/consumption/div/div/div/div/div[1]/div/div[1]/div[1]/div/div/ul/li[5]/div/div[1]/div[2]/input')))
+    driver.find_element_by_xpath('/html/body/section/div/div/div/div[1]/consumption/div/div/div/div/div[1]/div/div[1]/div[1]/div/div/ul/li[5]/div/div[1]/div[2]/input').click()
 
-# to click on the year tab in the totab in it
-wait.until(presence_of_element_located((By.XPATH, '/html/body/div[12]/div[1]/table/thead/tr[2]/th[2]')))
-driver.find_element_by_xpath('/html/body/div[12]/div[1]/table/thead/tr[2]/th[2]').click()
-time.sleep(1)
+    # to click on the year tab in the totab in it
+    wait.until(presence_of_element_located((By.XPATH, '/html/body/div[12]/div[1]/table/thead/tr[2]/th[2]')))
+    driver.find_element_by_xpath('/html/body/div[12]/div[1]/table/thead/tr[2]/th[2]').click()
+    time.sleep(1)
 
-# to click on the year's tab in the totab
-wait.until(presence_of_element_located((By.CSS_SELECTOR, 'body > div.datepicker.datepicker-dropdown.dropdown-menu.datepicker-orient-left.datepicker-orient-bottom > div.datepicker-months > table > thead > tr:nth-child(2) > th.datepicker-switch')))
-selectedYear = int(driver.find_element_by_css_selector('body > div.datepicker.datepicker-dropdown.dropdown-menu.datepicker-orient-left.datepicker-orient-bottom > div.datepicker-months > table > thead > tr:nth-child(2) > th.datepicker-switch').text)
-while selectedYear != toYear:
-    if selectedYear > toYear:
-        driver.find_element_by_css_selector('body > div.datepicker.datepicker-dropdown.dropdown-menu.datepicker-orient-left.datepicker-orient-bottom > div.datepicker-months > table > thead > tr:nth-child(2) > th.prev').click()
-    else:
-        driver.find_element_by_css_selector('body > div.datepicker.datepicker-dropdown.dropdown-menu.datepicker-orient-left.datepicker-orient-bottom > div.datepicker-months > table > thead > tr:nth-child(2) > th.next').click()
-
+    # to click on the year's tab in the totab
+    wait.until(presence_of_element_located((By.CSS_SELECTOR, 'body > div.datepicker.datepicker-dropdown.dropdown-menu.datepicker-orient-left.datepicker-orient-bottom > div.datepicker-months > table > thead > tr:nth-child(2) > th.datepicker-switch')))
     selectedYear = int(driver.find_element_by_css_selector('body > div.datepicker.datepicker-dropdown.dropdown-menu.datepicker-orient-left.datepicker-orient-bottom > div.datepicker-months > table > thead > tr:nth-child(2) > th.datepicker-switch').text)
-# driver.find_element_by_css_selector('#home > div.row.cons-space-top > div:nth-child(1) > div > div > ul > li:nth-child(5) > div > div:nth-child(1) > div.input_container.consumptionEndDt.datepicker-old.date > input').click()
+    while selectedYear != toYear:
+        if selectedYear > toYear:
+            driver.find_element_by_css_selector('body > div.datepicker.datepicker-dropdown.dropdown-menu.datepicker-orient-left.datepicker-orient-bottom > div.datepicker-months > table > thead > tr:nth-child(2) > th.prev').click()
+        else:
+            driver.find_element_by_css_selector('body > div.datepicker.datepicker-dropdown.dropdown-menu.datepicker-orient-left.datepicker-orient-bottom > div.datepicker-months > table > thead > tr:nth-child(2) > th.next').click()
 
-# to click on the data bar to pick the to date
-driver.find_element_by_xpath('/html/body/div[12]/div[2]/table/tbody').find_elements_by_tag_name('span')[toMonth-1].click()
+        selectedYear = int(driver.find_element_by_css_selector('body > div.datepicker.datepicker-dropdown.dropdown-menu.datepicker-orient-left.datepicker-orient-bottom > div.datepicker-months > table > thead > tr:nth-child(2) > th.datepicker-switch').text)
+    # driver.find_element_by_css_selector('#home > div.row.cons-space-top > div:nth-child(1) > div > div > ul > li:nth-child(5) > div > div:nth-child(1) > div.input_container.consumptionEndDt.datepicker-old.date > input').click()
 
-time.sleep(1)
-# /html/body/div[12]/div[1]/table/tbody
-tds_day = driver.find_element_by_xpath('/html/body/div[12]/div[1]/table/tbody').find_elements_by_class_name("day")
-for td in tds_day:
-    if td.text == toDate:
-        td.click()
-        break
+    # to click on the data bar to pick the to date
+    driver.find_element_by_xpath('/html/body/div[12]/div[2]/table/tbody').find_elements_by_tag_name('span')[toMonth-1].click()
 
-
-
-driver.execute_script(('window.scrollTo(0,450);'))
-
-# to download the xls file
-wait.until(presence_of_element_located((By.XPATH, '/html/body/section/div/div/div/div[1]/consumption/div/div/div/div/div[1]/div/div[3]/div[6]/div/div/div[2]/button/span[2]')))
-driver.find_element_by_xpath('/html/body/section/div/div/div/div[1]/consumption/div/div/div/div/div[1]/div/div[3]/div[6]/div/div/div[2]/button/span[2]').click()
+    time.sleep(1)
+    # /html/body/div[12]/div[1]/table/tbody
+    tds_day = driver.find_element_by_xpath('/html/body/div[12]/div[1]/table/tbody').find_elements_by_class_name("day")
+    for td in tds_day:
+        if td.text == toDate:
+            td.click()
+            break
 
 
-# to close the ad pop button
-wait.until(presence_of_element_located((By.XPATH, '/html/body/div[12]/div/div/div/div/button/span')))
-driver.find_element_by_xpath('/html/body/div[12]/div/div/div/div/button/span').click()
+
+    driver.execute_script(('window.scrollTo(0,450);'))
+
+    # to download the xls file
+    wait.until(presence_of_element_located((By.XPATH, '/html/body/section/div/div/div/div[1]/consumption/div/div/div/div/div[1]/div/div[3]/div[6]/div/div/div[2]/button/span[2]')))
+    driver.find_element_by_xpath('/html/body/section/div/div/div/div[1]/consumption/div/div/div/div/div[1]/div/div[3]/div[6]/div/div/div[2]/button/span[2]').click()
+
+
+    # to close the ad pop button
+    wait.until(presence_of_element_located((By.XPATH, '/html/body/div[12]/div/div/div/div/button/span')))
+    driver.find_element_by_xpath('/html/body/div[12]/div/div/div/div/button/span').click()
