@@ -6,9 +6,10 @@ from selenium.webdriver.support.expected_conditions import presence_of_element_l
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import Select
 import pandas as pd
+from scraping_utils import get_driver
 
 
-driver = webdriver.Chrome()
+driver = get_driver()
 
 driver.maximize_window()
 
@@ -34,6 +35,7 @@ driver.find_element_by_xpath('/html/body/form/div[4]/div[2]/div[1]/section/div/d
 wait.until(presence_of_element_located((By.XPATH, '/html/body/form/div[3]/div[2]/div/div[1]/div[1]/div/div/div/div[2]/div/div/table[1]/tbody/tr/td[2]/select')))
 city = Select(driver.find_element_by_xpath('/html/body/form/div[3]/div[2]/div/div[1]/div[1]/div/div/div/div[2]/div/div/table[1]/tbody/tr/td[2]/select'))
 city.select_by_visible_text('Vilhelmina')
+
 time.sleep(2)
 
 wait.until(presence_of_element_located((By.XPATH, '/html/body/form/div[3]/div[2]/div/div[1]/div[1]/div/div/div/div[2]/div/div/table[1]/tbody/tr/td[2]/select')))
@@ -47,31 +49,81 @@ driver.find_element_by_id('ContentPlaceHolder1_tbxKundnummer').send_keys('206621
 # to click on the Person-/Org.-nummer YYMMDDABCD(number)
 driver.find_element_by_id('ContentPlaceHolder1_tbxIdNummer').send_keys('5562308212')
 
-# to click on the Hamta data(Download Data) button
+# to click on the Hamta data(Show data) button
 wait.until(presence_of_element_located((By.XPATH, '/html/body/form/div[3]/div[2]/div/div[1]/div[1]/div/div/div/div[2]/div/div/table[1]/tbody/tr/td[7]/input')))
 driver.find_element_by_xpath('/html/body/form/div[3]/div[2]/div/div[1]/div[1]/div/div/div/div[2]/div/div/table[1]/tbody/tr/td[7]/input').click()
 
-wait.until(presence_of_element_located((By.XPATH,'/html/body/form/div[3]/div[2]/div/div[1]/div[1]/div/div/div/div[2]/div/div/table[2]/tbody/tr[12]/td/div/table/tbody')))
-tbody = driver.find_element_by_xpath('/html/body/form/div[3]/div[2]/div/div[1]/div[1]/div/div/div/div[2]/div/div/table[2]/tbody/tr[12]/td/div/table/tbody')
-trs = tbody.find_elements_by_tag_name("tr")
-header = []
-for td in trs[0].find_elements_by_tag_name("th"):
-    header.append(td.text)
+#Wait until the select element to select facilities is visible
+wait.until(presence_of_element_located((By.XPATH,'/html/body/form/div[3]/div[2]/div/div[1]/div[1]/div/div/div/div[2]/div/div/table[2]/tbody/tr[4]/td[2]/select')))
 
-complete_data = []
-# complete_data.append(header)
-trs = trs[1:]
-for tr in trs:
-    curr = []
-    for td in tr.find_elements_by_tag_name("td"):
-        curr.append(td.text)
-    complete_data.append(curr)
+select = Select(driver.find_element_by_xpath('/html/body/form/div[3]/div[2]/div/div[1]/div[1]/div/div/div/div[2]/div/div/table[2]/tbody/tr[4]/td[2]/select'))
+
+for option in select.options:
+    facilityId = option.text.split('-')[0].strip()
+
+    select.select_by_visible_text(option.text)
+    # print(option.text)
 
 
-df = pd.DataFrame(complete_data,columns=header)
-print(df.head())
+    #Wait until the table is present
+    wait.until(presence_of_element_located((By.XPATH,'/html/body/form/div[3]/div[2]/div/div[1]/div[1]/div/div/div/div[2]/div/div/table[2]/tbody/tr[12]/td/div/table/tbody')))
 
-df.to_csv('data.csv',index=False)
+    #Get tbody of the data table
+    tbody = driver.find_element_by_xpath('/html/body/form/div[3]/div[2]/div/div[1]/div[1]/div/div/div/div[2]/div/div/table[2]/tbody/tr[12]/td/div/table/tbody')
+
+    #for all the rows in the table
+    trs = tbody.find_elements_by_tag_name("tr")
+
+    header = []
+
+    #Create header list
+    for td in trs[0].find_elements_by_tag_name("th"):
+        header.append(td.text)
+
+    #list to hold list of row values
+    complete_data = []
+
+    #first row is the header row, so removing that for traversing
+    trs = trs[1:]
+
+    for tr in trs:
+        curr = []
+        for td in tr.find_elements_by_tag_name("td"):
+            curr.append(td.text)
+        complete_data.append(curr)
+
+
+    df = pd.DataFrame(complete_data,columns=header)
+
+    months = ['Januari','Februari','Mars','April','Maj','Juni','Juli','Augusti','September','Oktober','November','December']
+
+    complete_data_block = []
+
+    for i in range(len(df)):
+        year = df['År'][i]
+        for m in range(len(months) - 1):
+            data_block = {'facilityId':facilityId,'kind':'Fjärrvärme','quantity':'Energy','unit':'MWh'}
+            data_block['startDate'] = year+'-'+months[m]
+            data_block['endDate'] = year+'-'+months[m+1]
+            data_block['value'] = df[months[m]][i]
+            complete_data_block.append(data_block)
+        data_block = {'facilityId':facilityId,'kind':'Fjärrvärme','quantity':'Energy','unit':'MWh'}
+        data_block['startDate'] = year+'-'+months[m+1]
+        year = str(int(year) + 1)
+        data_block['endDate'] = year+'-'+months[(m+2)%len(months)]
+        data_block['value'] = df[months[m]][i]
+        complete_data_block.append(data_block)
+
+    for i in range(12):
+        print(complete_data_block[i])
+
+    # print(df.head())
+
+    # df.to_csv('data-'+facilityId+'.csv',index=False)
+
+    #data = {'agentId':'','jobId':'','username':'','facilityId':'','kind':'','quantity':'','startDate':'','endDate':'','unit':'','value':'','timestamp':''}
+
+    #data = {'agentId':'MESTRO-SOLOR-BIOENERGI','jobId':'9357ee44-0e0a-43cf-b7be-2186bd933ccc','username':'fvkund@solorbioenergi','facilityId':'42527977','kind':'Fjärrvärme','quantity':'Energy','startDate':'2021-Januari','endDate':'2021-Februari','unit':'MWh','value':'158629','timestamp':'1613986376157'}
 
 #/html/body/form/div[3]/div[2]/div/div[1]/div[1]/div/div/div/div[2]/div/div/table[2]/tbody/tr[12]/td/div/table/tbody
 
